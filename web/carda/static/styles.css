@@ -1,0 +1,18 @@
+h1 {
+    font-size: 500%;
+}
+
+.placeholder {
+    color: #ebabed;
+}
+.tab-container {
+    padding-top: 10px;
+    background-color: rgba(121, 214, 157, 0.616);
+    margin-right: 5px;
+}
+.tab-item:hover{
+    background-color: rgba(55, 173, 95, 0.616);
+}
+.tab-item:active{
+    background-color: rgba(27, 95, 50, 0.616);
+}

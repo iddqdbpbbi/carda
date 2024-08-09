@@ -1,0 +1,80 @@
+{{ define "tabs"  }}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a type="button" class="nav-link active" id="addusertab" data-bs-toggle="tab" hx-get="/adduserform" hx-target="#content" hx-swap="innerHTML">Add user</a>
+    </li>
+    <li class="nav-item">
+        <a type="button" class="nav-link" id="userscontactstab" data-bs-toggle="tab" hx-get="/userscontactsform" hx-target="#content" hx-swap="innerHTML">Users contacts</a>
+    </li>
+</ul>
+
+<!-- <div>
+    <div class="tabs" hx-get="/adduserform" hx-target="#content" hx-swap="innerHTML">Tab 1</div>
+    <div class="tabs" hx-get="/userscontactsform" hx-target="#content" hx-swap="innerHTML">Tab 2</div>
+</div> -->
+
+<div class="tab-content" id="content">
+        {{ block "adduserform" . }}{{end}}
+</div>
+<script>
+    
+    // Add an event listener for the button click
+    
+    // Function to handle keyboard shortcuts
+    function handleKeyboardShortcut(event) {
+        switch  (event.ctrlKey && (event.key)) {
+            case '1':
+            event.preventDefault();
+            document.getElementById('addusertab').click();
+            break;
+            case '2': 
+            event.preventDefault();
+            document.getElementById('userscontactstab').click();
+            break;
+        }
+    }
+    // Add an event listener for keydown events
+    document.addEventListener('keydown', handleKeyboardShortcut);
+</script>
+{{ end }}
+
+{{ define "adduserform"}}
+<h1>Добавление пользователя</h1>
+<form hx-post="/submituserdata" hx-target="#response" hx-swap="innerHTML">
+    <div class="">
+        <input class="form-control" type="text" placeholder="Введите ФИО" type="text" id="name" name="name" required>
+        <br>
+        <input class="form-control" type="text" placeholder="Введите электронную почту" type="text" id="email" name="email" required>
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+<div id="response"></div>
+{{end}}
+
+{{ define "userscontactsform" }}
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col" style="width: 20%;">#</th>
+        <th scope="col" style="width: 30%;">Имя</th>
+        <th scope="col" style="width: 40%;">Контакт</th>
+        <th scope="col" style="width: 10%;">Удалить</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{ range .Usersdata }}
+    <tr id="user{{ .Id }}">
+        <th scope="row">{{ .Id }}</th>
+        <td>{{ .Name }}</td>
+        <td>{{ .Email }}</td>
+        <td><button hx-delete="/deleteuser/{{ .Id }}" 
+            hx-target="#user{{ .Id }}"
+            type="button" class="btn btn-outline-danger">Удалить</button><td>
+    </tr>
+    {{ end }}
+{{ end }}
+
+{{ define "placeholder" }}
+    <div class="placeholder"> PLACEHOLDER </div>
+{{ end }}
