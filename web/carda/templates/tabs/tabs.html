@@ -39,12 +39,12 @@
 {{ end }}
 
 {{ define "adduserform"}}
-<h1>Добавление пользователя</h1>
+<h1>User addition</h1>
 <form hx-post="/submituserdata" hx-target="#response" hx-swap="innerHTML">
     <div class="">
-        <input class="form-control" type="text" placeholder="Введите ФИО" type="text" id="name" name="name" required>
+        <input class="form-control" type="text" placeholder="Type name" type="text" id="name" name="name" required>
         <br>
-        <input class="form-control" type="text" placeholder="Введите электронную почту" type="text" id="email" name="email" required>
+        <input class="form-control" type="text" placeholder="Type email" type="text" id="email" name="email" required>
         <br>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
@@ -70,7 +70,7 @@
         <td>{{ .Email }}</td>
         <td><button hx-delete="/deleteuser/{{ .Id }}" 
             hx-target="#user{{ .Id }}"
-            type="button" class="btn btn-outline-danger">Удалить</button><td>
+            type="button" class="btn btn-outline-danger">Delete</button><td>
     </tr>
     {{ end }}
 {{ end }}
