@@ -1,41 +1,40 @@
-create table users(
-    user_id serial primary key,
-    created_at timestamp default now(),
-    username varchar(30) not null unique);
+CREATE TABLE USERS(
+    USER_ID SERIAL PRIMARY KEY,
+    CREATED_AT TIMESTAMP DEFAULT NOW(),
+    USERNAME VARCHAR(30) NOT NULL UNIQUE);
 
-CREATE TYPE essential_contact_type AS ENUM ('phone', 'email');
+CREATE TYPE ESSENTIAL_CONTACT_TYPE AS ENUM ('PHONE', 'EMAIL');
 
-create table contacts(
-    contact_id serial primary key,
-    user_id int not null,
-    created_at timestamp default now(),
-    contact_type essential_contact_type,
-    contact_value varchar(255) not null unique,
-    active boolean not null,
-    foreign key (user_id) references users(user_id) on delete cascade
+CREATE TABLE CONTACTS(
+    CONTACT_ID SERIAL PRIMARY KEY,
+    USER_ID INT NOT NULL,
+    CREATED_AT TIMESTAMP DEFAULT NOW(),
+    CONTACT_TYPE ESSENTIAL_CONTACT_TYPE,
+    CONTACT_VALUE VARCHAR(255) NOT NULL UNIQUE,
+    ACTIVE BOOLEAN NOT NULL,
+    FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID) ON DELETE CASCADE
 );
 
-create or replace procedure add_user_with_email(
-    p_username varchar(30),
-    p_email varchar(255)
+CREATE OR REPLACE PROCEDURE ADD_USERS_WITH_EMAIL(
+    P_USERNAME VARCHAR(30),
+    P_EMAIL VARCHAR(255)
 )
-language plpgsql
-as $$
-begin
-    insert into users (username) 
-        values (p_username);
-    insert into contacts(user_id, contact_type, active, contact_value) 
-                values (lastval(), 'email', TRUE, p_email);
-    raise notice 'start of procedure';
-    exception
-        WHEN unique_violation THEN
-            RAISE EXCEPTION 'user with username already exists';
-            rollback;
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    INSERT INTO USERS (USERNAME) 
+        VALUES (P_USERNAME);
+    INSERT INTO CONTACTS(USER_ID, CONTACT_TYPE, ACTIVE, CONTACT_VALUE) 
+                VALUES (LASTVAL(), 'EMAIL', TRUE, P_EMAIL);
+    EXCEPTION
+        WHEN UNIQUE_VIOLATION THEN
+            RAISE EXCEPTION 'USER WITH USERNAME ALREADY EXISTS';
+            ROLLBACK;
 
-        when others then
-            -- Rollback the transaction in case of an error
-            raise exception 'unexpected error big pp';
-            rollback;
-    commit;
-end;
+        WHEN OTHERS THEN
+            -- Raise "big pp" exception because i need to know if it handle by this when block
+            RAISE EXCEPTION 'UNEXPECTED ERROR BIG PP';
+            ROLLBACK;
+    COMMIT;
+END;
 $$;
