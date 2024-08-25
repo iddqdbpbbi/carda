@@ -1,4 +1,4 @@
-package connector
+package dbconnect
 
 import (
 	"database/sql"
