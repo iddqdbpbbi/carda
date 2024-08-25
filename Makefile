@@ -8,4 +8,4 @@ run:
 	./main
 test:
 	go clean -testcache
-	go test -v ./internal/carda/sqlquery/
+	go test -v ./internal/carda/repo/
