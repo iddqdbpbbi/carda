@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	"carda/internal/carda/converter"
-	"carda/internal/carda/sqlquery"
+	"carda/internal/carda/repo"
 	"log"
 	"net/http"
 	"strings"
@@ -10,7 +9,7 @@ import (
 )
 
 type Form struct {
-	Usersdata []converter.UserView
+	Usersdata []*view
 }
 
 type FormData struct {
@@ -43,7 +42,7 @@ func SubmitUserHandler(w http.ResponseWriter, r *http.Request) {
 		Name:  r.FormValue("name"),
 		Email: r.FormValue("email"),
 	}
-	err := sqlquery.InsertUser(data.Name, data.Email)
+	err := repo.InsertUser(data.Name, data.Email)
 	if err != nil {
 		log.Fatal("err with inserting user ", err)
 	}
@@ -58,28 +57,19 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("incorrect argument in path")
 	}
 	userid := parts[2]
-	err := sqlquery.DeleteUserById(userid)
+	err := repo.DeleteUserById(userid)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func getUsers() []converter.UserView {
-	usersmodel, err := sqlquery.GetUsersAndContacts()
+func getUsers() (userview []*view) {
+	usersmodel, err := repo.GetUsersAndContacts()
 	if err != nil {
 		log.Fatal(err)
 	}
-	userview := convertUsersModelToUsersView(&usersmodel)
+	userview = dTOToViewS(usersmodel)
 	return userview
-}
-
-func convertUsersModelToUsersView(usersmodel *[]converter.UserModel) []converter.UserView {
-	var usersview []converter.UserView
-	for _, usermodel := range *usersmodel {
-		userview := converter.UserModelToView(&usermodel)
-		usersview = append(usersview, userview)
-	}
-	return usersview
 }
 
 func parseWrapper(files ...string) *template.Template {
